@@ -1,0 +1,170 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rtppp.local/schemas/rtppp-compact-v1.schema.json",
+  "title": "RT-PPP compact PPP solution format version 1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["meta", "solutions"],
+  "properties": {
+    "meta": {"$ref": "#/$defs/meta"},
+    "solutions": {"type": "array", "items": {"$ref": "#/$defs/solution"}}
+  },
+  "$defs": {
+    "numberOrNull": {"type": ["number", "null"]},
+    "satelliteId": {"oneOf": [{"type": "integer", "minimum": 1, "maximum": 699}, {"type": "string", "minLength": 1, "pattern": "\\S"}]},
+    "station": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "fileId", "referenceEcef"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1, "pattern": "\\S"},
+        "fileId": {"type": "string", "minLength": 1, "pattern": "\\S"},
+        "referenceEcef": {"type": "array", "minItems": 3, "maxItems": 3, "items": {"type": "number"}}
+      }
+    },
+    "timeBase": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["system", "date", "epoch", "unit", "gpsWeek", "gpsSow"],
+      "properties": {
+        "system": {"const": "UTC"},
+        "date": {"type": "string", "format": "date"},
+        "epoch": {"type": "string", "format": "date-time", "pattern": "^\\d{4}-\\d{2}-\\d{2}T00:00:00\\.000Z$"},
+        "unit": {"const": "ms"},
+        "gpsWeek": {"type": "integer", "minimum": 0},
+        "gpsSow": {"type": "number", "minimum": 0, "exclusiveMaximum": 604800}
+      }
+    },
+    "satelliteIdEncoding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["formula", "systemBase", "unknown"],
+      "properties": {
+        "formula": {"const": "systemBase + PRN"},
+        "unknown": {"const": "original string"},
+        "systemBase": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["G", "R", "E", "C", "J", "S", "I"],
+          "properties": {
+            "G": {"const": 0}, "R": {"const": 100}, "E": {"const": 200},
+            "C": {"const": 300}, "J": {"const": 400}, "S": {"const": 500},
+            "I": {"const": 600}
+          }
+        }
+      }
+    },
+    "layout": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["solution", "ecefCovarianceM2", "troposphere", "satelliteSummary", "satelliteSets", "lambdaArData", "bieArData", "arGroup"],
+      "properties": {
+        "solution": {"const": ["timeOffsetMs", "algorithm", "arStatus", "ecefM", "enuM", "ecefCovarianceM2", "troposphere", "satelliteSummary", "satelliteSets", "arData", "flags"]},
+        "ecefCovarianceM2": {"const": ["qxx", "qxy", "qxz", "qyy", "qyz", "qzz"]},
+        "troposphere": {"const": ["ztdM", "wetResidualM", "ztdStdM"]},
+        "satelliteSummary": {"const": ["used", "arEligible", "fixed", "hdop"]},
+        "satelliteSets": {"const": ["used", "arEligible", "fixed"]},
+        "lambdaArData": {"const": ["ratio", "bootstrap", "constraintsApplied", "groups"]},
+        "bieArData": {"const": ["candidateCount", "effectiveCandidates", "constraintsApplied", "groups"]},
+        "arGroup": {"const": ["system", "ambiguityGroup", "referenceSatellite", "fixed", "eligible", "maxFractionCycle", "maxSigmaCycle"]}
+      }
+    },
+    "meta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema", "version", "station", "timeBase", "algorithms", "arStatus", "systems", "ambiguityGroups", "satelliteIdEncoding", "layout"],
+      "properties": {
+        "schema": {"const": "rtppp.compact"},
+        "version": {"const": 1},
+        "station": {"$ref": "#/$defs/station"},
+        "timeBase": {"$ref": "#/$defs/timeBase"},
+        "algorithms": {"const": ["NONE", "LAMBDA", "BIE"]},
+        "arStatus": {"const": ["disabled", "float", "partial_fix", "fixed"]},
+        "systems": {"const": ["?", "G", "R", "E", "C", "J", "S", "I"]},
+        "ambiguityGroups": {"const": ["", "L1", "L2", "NL", "WL"]},
+        "satelliteIdEncoding": {"$ref": "#/$defs/satelliteIdEncoding"},
+        "layout": {"$ref": "#/$defs/layout"}
+      }
+    },
+    "arGroup": {
+      "type": "array", "minItems": 7, "maxItems": 7,
+      "prefixItems": [
+        {"type": "integer", "minimum": 0, "maximum": 7},
+        {"type": "integer", "minimum": 0, "maximum": 4},
+        {"oneOf": [{"$ref": "#/$defs/satelliteId"}, {"type": "null"}]},
+        {"type": "integer", "minimum": 0}, {"type": "integer", "minimum": 0},
+        {"$ref": "#/$defs/numberOrNull"}, {"$ref": "#/$defs/numberOrNull"}
+      ]
+    },
+    "arData": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "array", "minItems": 4, "maxItems": 4,
+          "prefixItems": [
+            {"$ref": "#/$defs/numberOrNull"}, {"$ref": "#/$defs/numberOrNull"},
+            {"type": "integer", "minimum": 0},
+            {"type": "array", "items": {"$ref": "#/$defs/arGroup"}}
+          ]
+        }
+      ]
+    },
+    "lambdaArData": {
+      "type": "array", "minItems": 4, "maxItems": 4,
+      "prefixItems": [
+        {"oneOf": [{"type": "number", "exclusiveMinimum": 0}, {"type": "null"}]},
+        {"oneOf": [{"type": "number", "exclusiveMinimum": 0}, {"type": "null"}]},
+        {"type": "integer", "minimum": 0},
+        {"type": "array", "items": {"$ref": "#/$defs/arGroup"}}
+      ]
+    },
+    "bieArData": {
+      "type": "array", "minItems": 4, "maxItems": 4,
+      "prefixItems": [
+        {"oneOf": [{"type": "integer", "minimum": 1}, {"type": "null"}]},
+        {"oneOf": [{"type": "number", "exclusiveMinimum": 0}, {"type": "null"}]},
+        {"type": "integer", "minimum": 0},
+        {"type": "array", "items": {"$ref": "#/$defs/arGroup"}}
+      ]
+    },
+    "solution": {
+      "type": "array", "minItems": 11, "maxItems": 11,
+      "prefixItems": [
+        {"type": "integer", "minimum": 0, "maximum": 86399999},
+        {"type": "integer", "minimum": 0, "maximum": 2},
+        {"type": "integer", "minimum": 0, "maximum": 3},
+        {"type": "array", "minItems": 3, "maxItems": 3, "items": {"type": "number"}},
+        {"type": "array", "minItems": 3, "maxItems": 3, "items": {"type": "number"}},
+        {"type": "array", "minItems": 6, "maxItems": 6, "items": {"$ref": "#/$defs/numberOrNull"}},
+        {"type": "array", "minItems": 3, "maxItems": 3, "items": {"$ref": "#/$defs/numberOrNull"}},
+        {
+          "type": "array", "minItems": 4, "maxItems": 4,
+          "prefixItems": [
+            {"type": "integer", "minimum": 0}, {"type": "integer", "minimum": 0},
+            {"type": "integer", "minimum": 0}, {"$ref": "#/$defs/numberOrNull"}
+          ]
+        },
+        {
+          "type": "array", "minItems": 3, "maxItems": 3,
+          "items": {"type": "array", "items": {"$ref": "#/$defs/satelliteId"}}
+        },
+        {"$ref": "#/$defs/arData"},
+        {"type": "integer", "minimum": 0}
+      ],
+      "allOf": [
+        {
+          "if": {"prefixItems": [{}, {"const": 0}]},
+          "then": {"prefixItems": [{}, {}, {}, {}, {}, {}, {}, {}, {}, {"type": "null"}]}
+        },
+        {
+          "if": {"prefixItems": [{}, {"const": 1}]},
+          "then": {"prefixItems": [{}, {}, {}, {}, {}, {}, {}, {}, {}, {"$ref": "#/$defs/lambdaArData"}]}
+        },
+        {
+          "if": {"prefixItems": [{}, {"const": 2}]},
+          "then": {"prefixItems": [{}, {}, {}, {}, {}, {}, {}, {}, {}, {"$ref": "#/$defs/bieArData"}]}
+        }
+      ]
+    }
+  }
+}

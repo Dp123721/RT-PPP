@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rtppp.local/schemas/ppp-config.schema.json",
+  "title": "RT-PPP PPP result analysis configuration",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["analysis", "output_directory", "datasets", "options"],
+  "properties": {
+    "analysis": {"const": "ppp"},
+    "output_directory": {"type": "string", "minLength": 1, "pattern": "\\S"},
+    "datasets": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "algorithm_label", "path", "reference_ecef_m"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1, "pattern": "\\S"},
+          "algorithm_label": {"type": "string", "minLength": 1, "pattern": "\\S"},
+          "path": {"type": "string", "minLength": 1, "pattern": "\\S"},
+          "reference_ecef_m": {
+            "type": "array",
+            "minItems": 3,
+            "maxItems": 3,
+            "items": {"type": "number"}
+          },
+          "reference_velocity_ecef_mps": {
+            "type": "array", "minItems": 3, "maxItems": 3,
+            "items": {"type": "number"}
+          },
+          "reference_epoch_utc": {"type": "string", "format": "date-time"},
+          "truth_trajectory": {"type": "string", "minLength": 1, "pattern": "\\S"},
+          "residual_directory": {"type": "string", "minLength": 1, "pattern": "\\S"},
+          "residual_source_id": {"type": "string", "minLength": 1, "pattern": "\\S"}
+        },
+        "allOf": [
+          {"if": {"required": ["reference_velocity_ecef_mps"]}, "then": {"required": ["reference_epoch_utc"]}},
+          {"if": {"required": ["reference_epoch_utc"]}, "then": {"required": ["reference_velocity_ecef_mps"]}},
+          {"not": {"required": ["truth_trajectory", "reference_velocity_ecef_mps"]}},
+          {"if": {"required": ["residual_source_id"]}, "then": {"required": ["residual_directory"]}}
+        ]
+      }
+    },
+    "options": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["horizontal_threshold_m", "vertical_threshold_m", "sustain_seconds"],
+      "properties": {
+        "horizontal_threshold_m": {"type": "number", "exclusiveMinimum": 0},
+        "vertical_threshold_m": {"type": "number", "exclusiveMinimum": 0},
+        "sustain_seconds": {"type": "number", "minimum": 0},
+        "convergence_gap_factor": {"type": "number", "exclusiveMinimum": 1},
+        "convergence_max_gap_seconds": {"type": "number", "minimum": 0},
+        "jump_mad_factor": {"type": "number", "exclusiveMinimum": 0},
+        "jump_minimum_m": {"type": "number", "minimum": 0},
+        "bootstrap_samples": {"type": "integer", "minimum": 100},
+        "bootstrap_confidence": {"type": "number", "exclusiveMinimum": 0, "exclusiveMaximum": 1},
+        "residual_outlier_sigma": {"type": "number", "exclusiveMinimum": 0}
+      }
+    }
+  }
+}

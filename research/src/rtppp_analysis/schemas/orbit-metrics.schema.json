@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rtppp.local/schemas/orbit-metrics.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["reference", "candidates", "products", "row_count", "common_sample_count", "metrics", "satellite_metrics", "coverage", "warnings"],
+  "properties": {
+    "reference": {"type": "string", "pattern": "\\S"},
+    "candidates": {"type": "array", "items": {"type": "string", "pattern": "\\S"}},
+    "products": {"type": "array", "items": {"$ref": "#/$defs/product"}},
+    "row_count": {"type": "integer", "minimum": 0},
+    "common_sample_count": {"type": "integer", "minimum": 0},
+    "metrics": {"type": "array", "items": {"$ref": "#/$defs/metric"}},
+    "satellite_metrics": {"type": "array", "items": {"$ref": "#/$defs/satelliteMetric"}},
+    "coverage": {"type": "array", "items": {"$ref": "#/$defs/coverage"}},
+    "warnings": {"type": "array", "items": {"type": "string"}}
+  },
+  "$defs": {
+    "numberOrNull": {"type": ["number", "null"]},
+    "rateOrNull": {
+      "oneOf": [
+        {"type": "number", "minimum": 0, "maximum": 1},
+        {"type": "null"}
+      ]
+    },
+    "stats": {
+      "type": "object", "additionalProperties": false,
+      "required": ["count", "total_count", "missing_count", "coverage_rate", "mean", "std", "rms", "median", "p68_abs", "p95_abs", "max_abs"],
+      "properties": {
+        "count": {"type": "integer", "minimum": 0}, "total_count": {"type": "integer", "minimum": 0},
+        "missing_count": {"type": "integer", "minimum": 0}, "coverage_rate": {"$ref": "#/$defs/rateOrNull"},
+        "mean": {"$ref": "#/$defs/numberOrNull"}, "std": {"$ref": "#/$defs/numberOrNull"},
+        "rms": {"$ref": "#/$defs/numberOrNull"}, "median": {"$ref": "#/$defs/numberOrNull"},
+        "p68_abs": {"$ref": "#/$defs/numberOrNull"}, "p95_abs": {"$ref": "#/$defs/numberOrNull"},
+        "max_abs": {"$ref": "#/$defs/numberOrNull"}
+      }
+    },
+    "product": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "role", "time_scale", "orbit_reference", "reference_frame"],
+      "properties": {
+        "id": {"type": "string", "pattern": "\\S"}, "role": {"enum": ["reference", "candidate"]},
+        "time_scale": {"enum": ["GPS", "UTC"]},
+        "orbit_reference": {"enum": ["APC", "COM", "UNKNOWN"]},
+        "reference_frame": {"type": "string", "pattern": "^[A-Z0-9._-]+$"}
+      }
+    },
+    "metric": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "scope", "candidate_id", "reference_id", "system", "sample_count", "satellite_count",
+        "radial_m_count", "radial_m_total_count", "radial_m_missing_count", "radial_m_coverage_rate", "radial_m_mean", "radial_m_std", "radial_m_rms", "radial_m_median", "radial_m_p68_abs", "radial_m_p95_abs", "radial_m_max_abs",
+        "along_m_count", "along_m_total_count", "along_m_missing_count", "along_m_coverage_rate", "along_m_mean", "along_m_std", "along_m_rms", "along_m_median", "along_m_p68_abs", "along_m_p95_abs", "along_m_max_abs",
+        "cross_m_count", "cross_m_total_count", "cross_m_missing_count", "cross_m_coverage_rate", "cross_m_mean", "cross_m_std", "cross_m_rms", "cross_m_median", "cross_m_p68_abs", "cross_m_p95_abs", "cross_m_max_abs",
+        "orbit_3d_m_count", "orbit_3d_m_total_count", "orbit_3d_m_missing_count", "orbit_3d_m_coverage_rate", "orbit_3d_m_mean", "orbit_3d_m_std", "orbit_3d_m_rms", "orbit_3d_m_median", "orbit_3d_m_p68_abs", "orbit_3d_m_p95_abs", "orbit_3d_m_max_abs",
+        "clock_raw_m_count", "clock_raw_m_total_count", "clock_raw_m_missing_count", "clock_raw_m_coverage_rate", "clock_raw_m_mean", "clock_raw_m_std", "clock_raw_m_rms", "clock_raw_m_median", "clock_raw_m_p68_abs", "clock_raw_m_p95_abs", "clock_raw_m_max_abs",
+        "clock_datum_removed_m_count", "clock_datum_removed_m_total_count", "clock_datum_removed_m_missing_count", "clock_datum_removed_m_coverage_rate", "clock_datum_removed_m_mean", "clock_datum_removed_m_std", "clock_datum_removed_m_rms", "clock_datum_removed_m_median", "clock_datum_removed_m_p68_abs", "clock_datum_removed_m_p95_abs", "clock_datum_removed_m_max_abs",
+        "sisre_m_count", "sisre_m_total_count", "sisre_m_missing_count", "sisre_m_coverage_rate", "sisre_m_mean", "sisre_m_std", "sisre_m_rms", "sisre_m_median", "sisre_m_p68_abs", "sisre_m_p95_abs", "sisre_m_max_abs"
+      ],
+      "properties": {
+        "scope": {"enum": ["all", "common", "pairwise"]},
+        "candidate_id": {"type": "string", "pattern": "\\S"}, "reference_id": {"type": "string", "pattern": "\\S"},
+        "system": {"type": "string", "minLength": 1, "maxLength": 1},
+        "sample_count": {"type": "integer", "minimum": 0},
+        "satellite_count": {"type": "integer", "minimum": 0}
+      },
+      "patternProperties": {
+        "^(radial_m|along_m|cross_m|orbit_3d_m|clock_raw_m|clock_datum_removed_m|sisre_m)_(count|total_count|missing_count)$": {"type": "integer", "minimum": 0},
+        "^(radial_m|along_m|cross_m|orbit_3d_m|clock_raw_m|clock_datum_removed_m|sisre_m)_coverage_rate$": {"$ref": "#/$defs/rateOrNull"},
+        "^(radial_m|along_m|cross_m|orbit_3d_m|clock_raw_m|clock_datum_removed_m|sisre_m)_(mean|std|rms|median|p68_abs|p95_abs|max_abs)$": {"$ref": "#/$defs/numberOrNull"}
+      }
+    },
+    "coverage": {
+      "type": "object", "additionalProperties": false,
+      "required": ["comparison_scope", "candidate_id", "reference_id", "candidate_sample_count", "compared_orbit_count", "clock_compared_count", "orbit_coverage_rate", "clock_coverage_rate", "rejection_counts"],
+      "properties": {
+        "comparison_scope": {"enum": ["reference", "pairwise_center"]},
+        "candidate_id": {"type": "string", "pattern": "\\S"}, "reference_id": {"type": "string", "pattern": "\\S"},
+        "candidate_sample_count": {"type": "integer", "minimum": 0},
+        "compared_orbit_count": {"type": "integer", "minimum": 0},
+        "clock_compared_count": {"type": "integer", "minimum": 0},
+        "orbit_coverage_rate": {"$ref": "#/$defs/rateOrNull"},
+        "clock_coverage_rate": {"$ref": "#/$defs/rateOrNull"},
+        "rejection_counts": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}}
+      }
+    },
+    "satelliteMetric": {
+      "type": "object", "additionalProperties": false,
+      "required": ["comparison_scope", "candidate_id", "reference_id", "system", "satellite", "candidate_sample_count", "compared_orbit_count", "clock_compared_count", "orbit_coverage_rate", "clock_coverage_rate", "rejection_counts", "statistics"],
+      "properties": {
+        "comparison_scope": {"enum": ["reference", "pairwise_center"]},
+        "candidate_id": {"type": "string", "pattern": "\\S"}, "reference_id": {"type": "string", "pattern": "\\S"},
+        "system": {"type": "string", "minLength": 1, "maxLength": 1},
+        "satellite": {"type": "string", "pattern": "^[A-Z][0-9]{2}$"},
+        "candidate_sample_count": {"type": "integer", "minimum": 0},
+        "compared_orbit_count": {"type": "integer", "minimum": 0},
+        "clock_compared_count": {"type": "integer", "minimum": 0},
+        "orbit_coverage_rate": {"$ref": "#/$defs/rateOrNull"},
+        "clock_coverage_rate": {"$ref": "#/$defs/rateOrNull"},
+        "rejection_counts": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}},
+        "statistics": {
+          "type": "object", "additionalProperties": false,
+          "required": ["radial_m", "along_m", "cross_m", "orbit_3d_m", "clock_raw_m", "clock_datum_removed_m", "sisre_m"],
+          "properties": {
+            "radial_m": {"$ref": "#/$defs/stats"}, "along_m": {"$ref": "#/$defs/stats"},
+            "cross_m": {"$ref": "#/$defs/stats"}, "orbit_3d_m": {"$ref": "#/$defs/stats"},
+            "clock_raw_m": {"$ref": "#/$defs/stats"}, "clock_datum_removed_m": {"$ref": "#/$defs/stats"},
+            "sisre_m": {"$ref": "#/$defs/stats"}
+          }
+        }
+      }
+    }
+  }
+}

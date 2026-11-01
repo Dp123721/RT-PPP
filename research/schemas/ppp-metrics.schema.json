@@ -1,0 +1,174 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rtppp.local/schemas/ppp-metrics.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["datasets", "common_epoch_count", "common_epoch_coverage", "paired_comparisons", "residual_groups", "convergence_definition", "warnings"],
+  "properties": {
+    "datasets": {"type": "array", "items": {"$ref": "#/$defs/dataset"}},
+    "common_epoch_count": {"type": "integer", "minimum": 0},
+    "common_epoch_coverage": {"type": "array", "items": {"$ref": "#/$defs/commonCoverage"}},
+    "paired_comparisons": {"type": "array", "items": {"$ref": "#/$defs/pairedComparison"}},
+    "residual_groups": {"type": "array", "items": {"$ref": "#/$defs/residualGroup"}},
+    "convergence_definition": {
+      "type": "object", "additionalProperties": false,
+      "required": ["horizontal_threshold_m", "vertical_threshold_m", "sustain_seconds"],
+      "properties": {
+        "horizontal_threshold_m": {"type": "number", "exclusiveMinimum": 0},
+        "vertical_threshold_m": {"type": "number", "exclusiveMinimum": 0},
+        "sustain_seconds": {"type": "number", "minimum": 0}
+      }
+    },
+    "warnings": {"type": "array", "items": {"type": "string"}}
+  },
+  "$defs": {
+    "numberOrNull": {"type": ["number", "null"]},
+    "rateOrNull": {
+      "oneOf": [
+        {"type": "number", "minimum": 0, "maximum": 1},
+        {"type": "null"}
+      ]
+    },
+    "nonnegativeNumberOrNull": {
+      "oneOf": [
+        {"type": "number", "minimum": 0},
+        {"type": "null"}
+      ]
+    },
+    "stats": {
+      "type": "object", "additionalProperties": false,
+      "required": ["count", "total_count", "missing_count", "coverage_rate", "mean", "std", "rms", "median", "p68_abs", "p95_abs", "max_abs"],
+      "properties": {
+        "count": {"type": "integer", "minimum": 0},
+        "total_count": {"type": "integer", "minimum": 0},
+        "missing_count": {"type": "integer", "minimum": 0},
+        "coverage_rate": {"$ref": "#/$defs/rateOrNull"},
+        "mean": {"$ref": "#/$defs/numberOrNull"},
+        "std": {"$ref": "#/$defs/numberOrNull"},
+        "rms": {"$ref": "#/$defs/numberOrNull"},
+        "median": {"$ref": "#/$defs/numberOrNull"},
+        "p68_abs": {"$ref": "#/$defs/numberOrNull"},
+        "p95_abs": {"$ref": "#/$defs/numberOrNull"},
+        "max_abs": {"$ref": "#/$defs/numberOrNull"}
+      }
+    },
+    "dataset": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "dataset_id", "algorithm_label", "station", "compact_version", "reference_mode",
+        "epoch_count", "finite_solution_count", "solution_coverage_rate", "reference_ecef_m",
+        "north_m", "east_m", "up_m", "horizontal_m", "error_3d_m", "ztd_m",
+        "wet_residual_m", "ztd_std_m", "hdop", "north_normalized", "east_normalized",
+        "up_normalized", "nees", "nees_95_coverage_rate", "stored_minus_computed_neu_m",
+        "inferred_interval_seconds", "convergence_max_gap_seconds", "convergence_seconds",
+        "any_fix_epoch_rate", "full_fix_epoch_rate", "fixed_over_eligible_rate",
+        "fixed_over_used_rate", "ar_consistency_violation_count", "jump_count",
+        "jump_threshold_m", "any_fix_segment_count", "full_fix_segment_count",
+        "longest_any_fix_seconds", "longest_full_fix_seconds", "fix_loss_count",
+        "refix_seconds", "position_reconvergence_seconds", "residual_analysis_available",
+        "residual_unavailable_reason", "residual_count", "residual_nis"
+      ],
+      "properties": {
+        "dataset_id": {"type": "string", "pattern": "\\S"},
+        "algorithm_label": {"type": "string", "pattern": "\\S"},
+        "station": {"oneOf": [{"type": "string", "pattern": "\\S"}, {"type": "null"}]},
+        "compact_version": {"const": 1},
+        "reference_mode": {"enum": ["static", "velocity", "trajectory"]},
+        "epoch_count": {"type": "integer", "minimum": 0},
+        "finite_solution_count": {"type": "integer", "minimum": 0},
+        "solution_coverage_rate": {"$ref": "#/$defs/rateOrNull"},
+        "reference_ecef_m": {"type": "array", "minItems": 3, "maxItems": 3, "items": {"type": "number"}},
+        "north_m": {"$ref": "#/$defs/stats"},
+        "east_m": {"$ref": "#/$defs/stats"},
+        "up_m": {"$ref": "#/$defs/stats"},
+        "horizontal_m": {"$ref": "#/$defs/stats"},
+        "error_3d_m": {"$ref": "#/$defs/stats"},
+        "ztd_m": {"$ref": "#/$defs/stats"},
+        "wet_residual_m": {"$ref": "#/$defs/stats"},
+        "ztd_std_m": {"$ref": "#/$defs/stats"},
+        "hdop": {"$ref": "#/$defs/stats"},
+        "north_normalized": {"$ref": "#/$defs/stats"},
+        "east_normalized": {"$ref": "#/$defs/stats"},
+        "up_normalized": {"$ref": "#/$defs/stats"},
+        "nees": {"$ref": "#/$defs/stats"},
+        "nees_95_coverage_rate": {"$ref": "#/$defs/rateOrNull"},
+        "stored_minus_computed_neu_m": {
+          "type": "object", "additionalProperties": false,
+          "required": ["north", "east", "up"],
+          "properties": {
+            "north": {"$ref": "#/$defs/stats"},
+            "east": {"$ref": "#/$defs/stats"},
+            "up": {"$ref": "#/$defs/stats"}
+          }
+        },
+        "inferred_interval_seconds": {"$ref": "#/$defs/nonnegativeNumberOrNull"},
+        "convergence_max_gap_seconds": {"$ref": "#/$defs/nonnegativeNumberOrNull"},
+        "convergence_seconds": {"$ref": "#/$defs/nonnegativeNumberOrNull"},
+        "any_fix_epoch_rate": {"$ref": "#/$defs/rateOrNull"},
+        "full_fix_epoch_rate": {"$ref": "#/$defs/rateOrNull"},
+        "fixed_over_eligible_rate": {"$ref": "#/$defs/rateOrNull"},
+        "fixed_over_used_rate": {"$ref": "#/$defs/rateOrNull"},
+        "ar_consistency_violation_count": {"const": 0},
+        "jump_count": {"type": "integer", "minimum": 0},
+        "jump_threshold_m": {"type": "number", "minimum": 0},
+        "any_fix_segment_count": {"type": "integer", "minimum": 0},
+        "full_fix_segment_count": {"type": "integer", "minimum": 0},
+        "longest_any_fix_seconds": {"$ref": "#/$defs/nonnegativeNumberOrNull"},
+        "longest_full_fix_seconds": {"$ref": "#/$defs/nonnegativeNumberOrNull"},
+        "fix_loss_count": {"type": "integer", "minimum": 0},
+        "refix_seconds": {"$ref": "#/$defs/stats"},
+        "position_reconvergence_seconds": {"$ref": "#/$defs/stats"},
+        "residual_analysis_available": {"type": "boolean"},
+        "residual_unavailable_reason": {
+          "oneOf": [{"const": "unknown"}, {"type": "null"}]
+        },
+        "residual_count": {"type": "integer", "minimum": 0},
+        "residual_nis": {"$ref": "#/$defs/stats"}
+      }
+    },
+    "commonCoverage": {
+      "type": "object", "additionalProperties": false,
+      "required": ["dataset_id", "epoch_count", "common_epoch_count", "coverage_rate"],
+      "properties": {
+        "dataset_id": {"type": "string", "pattern": "\\S"},
+        "epoch_count": {"type": "integer", "minimum": 0},
+        "common_epoch_count": {"type": "integer", "minimum": 0},
+        "coverage_rate": {"$ref": "#/$defs/rateOrNull"}
+      }
+    },
+    "pairedComparison": {
+      "type": "object", "additionalProperties": false,
+      "required": ["first_id", "second_id", "metric", "common_epoch_count", "difference", "sign_test_pvalue", "bootstrap_confidence", "bootstrap_mean_ci_low", "bootstrap_mean_ci_high"],
+      "properties": {
+        "first_id": {"type": "string", "pattern": "\\S"},
+        "second_id": {"type": "string", "pattern": "\\S"},
+        "metric": {"enum": ["horizontal_m", "error_3d_m"]},
+        "common_epoch_count": {"type": "integer", "minimum": 0},
+        "difference": {"$ref": "#/$defs/stats"},
+        "sign_test_pvalue": {"$ref": "#/$defs/rateOrNull"},
+        "bootstrap_confidence": {"type": "number", "exclusiveMinimum": 0, "exclusiveMaximum": 1},
+        "bootstrap_mean_ci_low": {"$ref": "#/$defs/numberOrNull"},
+        "bootstrap_mean_ci_high": {"$ref": "#/$defs/numberOrNull"}
+      }
+    },
+    "residualGroup": {
+      "type": "object", "additionalProperties": false,
+      "required": ["dataset_id", "observation_type", "signal", "total_count", "adopted_count", "rejected_count", "adoption_rate", "prefit_m", "postfit_m", "normalized_prefit", "normalized_postfit", "elevation_abs_postfit_correlation", "outlier_count"],
+      "properties": {
+        "dataset_id": {"type": "string", "pattern": "\\S"},
+        "observation_type": {"enum": ["code", "phase", "iono"]},
+        "signal": {"type": "string", "pattern": "\\S"},
+        "total_count": {"type": "integer", "minimum": 0},
+        "adopted_count": {"type": "integer", "minimum": 0},
+        "rejected_count": {"type": "integer", "minimum": 0},
+        "adoption_rate": {"$ref": "#/$defs/rateOrNull"},
+        "prefit_m": {"$ref": "#/$defs/stats"},
+        "postfit_m": {"$ref": "#/$defs/stats"},
+        "normalized_prefit": {"$ref": "#/$defs/stats"},
+        "normalized_postfit": {"$ref": "#/$defs/stats"},
+        "elevation_abs_postfit_correlation": {"$ref": "#/$defs/numberOrNull"},
+        "outlier_count": {"type": "integer", "minimum": 0}
+      }
+    }
+  }
+}

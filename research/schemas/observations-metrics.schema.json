@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rtppp.local/schemas/observations-metrics.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["datasets", "signal_groups", "snr_satellite_groups", "snr_elevation_groups", "warnings"],
+  "properties": {
+    "datasets": {"type": "array", "items": {"$ref": "#/$defs/dataset"}},
+    "signal_groups": {"type": "array", "items": {"$ref": "#/$defs/signal"}},
+    "snr_satellite_groups": {"type": "array", "items": {"$ref": "#/$defs/snrSatellite"}},
+    "snr_elevation_groups": {"type": "array", "items": {"$ref": "#/$defs/snrElevation"}},
+    "warnings": {"type": "array", "items": {"type": "string"}}
+  },
+  "$defs": {
+    "numberOrNull": {"type": ["number", "null"]},
+    "rateOrNull": {
+      "oneOf": [
+        {"type": "number", "minimum": 0, "maximum": 1},
+        {"type": "null"}
+      ]
+    },
+    "missingReasonOrNull": {
+      "oneOf": [
+        {"enum": ["not_transmitted", "not_received", "stream_interruption", "stale", "iod_mismatch", "rejected", "invalid", "unknown"]},
+        {"type": "null"}
+      ]
+    },
+    "stats": {
+      "type": "object", "additionalProperties": false,
+      "required": ["count", "total_count", "missing_count", "coverage_rate", "mean", "std", "rms", "median", "p68_abs", "p95_abs", "max_abs"],
+      "properties": {
+        "count": {"type": "integer", "minimum": 0}, "total_count": {"type": "integer", "minimum": 0},
+        "missing_count": {"type": "integer", "minimum": 0}, "coverage_rate": {"$ref": "#/$defs/rateOrNull"},
+        "mean": {"$ref": "#/$defs/numberOrNull"}, "std": {"$ref": "#/$defs/numberOrNull"},
+        "rms": {"$ref": "#/$defs/numberOrNull"}, "median": {"$ref": "#/$defs/numberOrNull"},
+        "p68_abs": {"$ref": "#/$defs/numberOrNull"}, "p95_abs": {"$ref": "#/$defs/numberOrNull"},
+        "max_abs": {"$ref": "#/$defs/numberOrNull"}
+      }
+    },
+    "dataset": {
+      "type": "object", "additionalProperties": false,
+      "required": ["dataset_id", "station", "epoch_count", "event_epoch_count", "satellite_record_count", "observation_value_count", "first_epoch_utc", "last_epoch_utc", "duration_seconds", "inferred_interval_seconds", "gap_count", "estimated_missing_epoch_count", "maximum_gap_seconds", "longest_interruption_seconds", "unique_satellite_count", "system_satellite_counts", "satellite_count_stats", "telemetry_analysis_available", "telemetry_unavailable_reason", "msm_telemetry_count", "ssr_telemetry_count", "reception_event_count", "reception_status_counts", "reception_reason_counts", "stream_interruption_count", "lock_arc_count", "cycle_slip_count", "half_cycle_event_count", "maximum_continuous_tracking_seconds", "ssr_reception_analysis_available", "ssr_reception_unavailable_reason", "snr_elevation_analysis_available", "snr_elevation_unavailable_reason", "parquet_partition_count"],
+      "properties": {
+        "dataset_id": {"type": "string", "pattern": "\\S"}, "station": {"type": "string", "pattern": "\\S"},
+        "epoch_count": {"type": "integer", "minimum": 0}, "event_epoch_count": {"type": "integer", "minimum": 0},
+        "satellite_record_count": {"type": "integer", "minimum": 0}, "observation_value_count": {"type": "integer", "minimum": 0},
+        "first_epoch_utc": {"oneOf": [{"type": "string", "format": "date-time"}, {"type": "null"}]},
+        "last_epoch_utc": {"oneOf": [{"type": "string", "format": "date-time"}, {"type": "null"}]},
+        "duration_seconds": {"type": "number", "minimum": 0}, "inferred_interval_seconds": {"$ref": "#/$defs/numberOrNull"},
+        "gap_count": {"type": "integer", "minimum": 0}, "estimated_missing_epoch_count": {"type": "integer", "minimum": 0},
+        "maximum_gap_seconds": {"$ref": "#/$defs/numberOrNull"}, "longest_interruption_seconds": {"$ref": "#/$defs/numberOrNull"},
+        "unique_satellite_count": {"type": "integer", "minimum": 0},
+        "system_satellite_counts": {"type": "object", "additionalProperties": false, "patternProperties": {"^[A-Z]$": {"type": "integer", "minimum": 0}}},
+        "satellite_count_stats": {"$ref": "#/$defs/stats"},
+        "telemetry_analysis_available": {"type": "boolean"}, "telemetry_unavailable_reason": {"$ref": "#/$defs/missingReasonOrNull"},
+        "msm_telemetry_count": {"type": "integer", "minimum": 0}, "ssr_telemetry_count": {"type": "integer", "minimum": 0},
+        "reception_event_count": {"type": "integer", "minimum": 0},
+        "reception_status_counts": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}},
+        "reception_reason_counts": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}},
+        "stream_interruption_count": {"type": "integer", "minimum": 0}, "lock_arc_count": {"type": "integer", "minimum": 0},
+        "cycle_slip_count": {"type": "integer", "minimum": 0}, "half_cycle_event_count": {"type": "integer", "minimum": 0},
+        "maximum_continuous_tracking_seconds": {"$ref": "#/$defs/numberOrNull"},
+        "ssr_reception_analysis_available": {"type": "boolean"}, "ssr_reception_unavailable_reason": {"$ref": "#/$defs/missingReasonOrNull"},
+        "snr_elevation_analysis_available": {"type": "boolean"}, "snr_elevation_unavailable_reason": {"$ref": "#/$defs/missingReasonOrNull"},
+        "parquet_partition_count": {"type": "integer", "minimum": 0}
+      }
+    },
+    "signal": {
+      "type": "object", "additionalProperties": false,
+      "required": ["dataset_id", "station", "system", "observation_type", "signal", "value_count", "possible_value_count", "missing_value_count", "value_coverage_rate", "epoch_count", "total_epoch_count", "satellite_count", "total_system_satellite_count", "epoch_coverage_rate", "satellite_coverage_rate", "lli_value_count", "ssi_value_count"],
+      "properties": {
+        "dataset_id": {"type": "string", "pattern": "\\S"}, "station": {"type": "string", "pattern": "\\S"},
+        "system": {"type": "string", "minLength": 1, "maxLength": 1},
+        "observation_type": {"type": "string", "pattern": "^[A-Z][0-9][A-Z0-9]$"}, "signal": {"type": "string", "pattern": "\\S"},
+        "value_count": {"type": "integer", "minimum": 0}, "possible_value_count": {"type": "integer", "minimum": 0},
+        "missing_value_count": {"type": "integer", "minimum": 0}, "value_coverage_rate": {"$ref": "#/$defs/rateOrNull"},
+        "epoch_count": {"type": "integer", "minimum": 0}, "total_epoch_count": {"type": "integer", "minimum": 0},
+        "satellite_count": {"type": "integer", "minimum": 0}, "total_system_satellite_count": {"type": "integer", "minimum": 0},
+        "epoch_coverage_rate": {"$ref": "#/$defs/rateOrNull"}, "satellite_coverage_rate": {"$ref": "#/$defs/rateOrNull"},
+        "lli_value_count": {"type": "integer", "minimum": 0}, "ssi_value_count": {"type": "integer", "minimum": 0}
+      },
+      "patternProperties": {
+        "^snr_(count|total_count|missing_count)$": {"type": "integer", "minimum": 0},
+        "^snr_coverage_rate$": {"$ref": "#/$defs/rateOrNull"},
+        "^snr_(mean|std|rms|median|p68_abs|p95_abs|max_abs)$": {"$ref": "#/$defs/numberOrNull"}
+      },
+      "allOf": [{"if": {"properties": {"observation_type": {"pattern": "^S"}}}, "then": {"required": ["snr_count", "snr_total_count", "snr_missing_count", "snr_coverage_rate", "snr_mean", "snr_std", "snr_rms", "snr_median", "snr_p68_abs", "snr_p95_abs", "snr_max_abs"]}}]
+    },
+    "snrElevation": {
+      "type": "object", "additionalProperties": false,
+      "required": ["dataset_id", "station", "source_id", "satellite", "signal", "elevation_min_deg", "elevation_max_deg", "snr_count", "snr_total_count", "snr_missing_count", "snr_coverage_rate", "snr_mean", "snr_std", "snr_rms", "snr_median", "snr_p68_abs", "snr_p95_abs", "snr_max_abs"],
+      "properties": {
+        "dataset_id": {"type": "string", "pattern": "\\S"}, "station": {"type": "string", "pattern": "\\S"},
+        "source_id": {"type": "string", "pattern": "\\S"}, "satellite": {"type": "string", "pattern": "^[A-Z][0-9]{2}$"},
+        "signal": {"type": "string", "pattern": "\\S"}, "elevation_min_deg": {"type": "integer", "minimum": 0, "maximum": 80},
+        "elevation_max_deg": {"type": "integer", "minimum": 10, "maximum": 90},
+        "snr_count": {"type": "integer", "minimum": 0}, "snr_total_count": {"type": "integer", "minimum": 0},
+        "snr_missing_count": {"type": "integer", "minimum": 0}, "snr_coverage_rate": {"$ref": "#/$defs/rateOrNull"},
+        "snr_mean": {"$ref": "#/$defs/numberOrNull"}, "snr_std": {"$ref": "#/$defs/numberOrNull"},
+        "snr_rms": {"$ref": "#/$defs/numberOrNull"}, "snr_median": {"$ref": "#/$defs/numberOrNull"},
+        "snr_p68_abs": {"$ref": "#/$defs/numberOrNull"}, "snr_p95_abs": {"$ref": "#/$defs/numberOrNull"}, "snr_max_abs": {"$ref": "#/$defs/numberOrNull"}
+      }
+    },
+    "snrSatellite": {
+      "type": "object", "additionalProperties": false,
+      "required": ["dataset_id", "station", "system", "satellite", "observation_type", "signal", "snr_count", "snr_total_count", "snr_missing_count", "snr_coverage_rate", "snr_mean", "snr_std", "snr_rms", "snr_median", "snr_p68_abs", "snr_p95_abs", "snr_max_abs"],
+      "properties": {
+        "dataset_id": {"type": "string", "pattern": "\\S"}, "station": {"type": "string", "pattern": "\\S"},
+        "system": {"type": "string", "minLength": 1, "maxLength": 1}, "satellite": {"type": "string", "pattern": "^[A-Z][0-9]{2}$"},
+        "observation_type": {"type": "string", "pattern": "^S[0-9][A-Z0-9]$"}, "signal": {"type": "string", "pattern": "\\S"},
+        "snr_count": {"type": "integer", "minimum": 0}, "snr_total_count": {"type": "integer", "minimum": 0},
+        "snr_missing_count": {"type": "integer", "minimum": 0}, "snr_coverage_rate": {"$ref": "#/$defs/rateOrNull"},
+        "snr_mean": {"$ref": "#/$defs/numberOrNull"}, "snr_std": {"$ref": "#/$defs/numberOrNull"},
+        "snr_rms": {"$ref": "#/$defs/numberOrNull"}, "snr_median": {"$ref": "#/$defs/numberOrNull"},
+        "snr_p68_abs": {"$ref": "#/$defs/numberOrNull"}, "snr_p95_abs": {"$ref": "#/$defs/numberOrNull"}, "snr_max_abs": {"$ref": "#/$defs/numberOrNull"}
+      }
+    }
+  }
+}

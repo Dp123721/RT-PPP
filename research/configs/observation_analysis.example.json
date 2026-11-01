@@ -1,0 +1,19 @@
+{
+  "analysis": "observations",
+  "output_directory": "../workspace/observations_example",
+  "datasets": [
+    {
+      "id": "station_bjfs",
+      "station": "BJFS",
+      "rinex": "D:/data/observations/rtppp_20260727.rnx",
+      "time_scale": "UTC",
+      "telemetry_directory": "D:/data/telemetry",
+      "telemetry_source_id": "NTRIP-SSR"
+    }
+  ],
+  "options": {
+    "expected_interval_seconds": 1.0,
+    "gap_factor": 1.5,
+    "write_parquet": false
+  }
+}
