@@ -1,0 +1,106 @@
+$$ Ocean loading displacement
+$$
+$$ Calculated on holt using olfg/olmpp of H.-G. Scherneck
+$$
+$$ COLUMN ORDER:  M2  S2  N2  K2  K1  O1  P1  Q1  MF  MM SSA
+$$
+$$ ROW ORDER:
+$$ AMPLITUDES (m)
+$$   RADIAL
+$$   TANGENTL    EW
+$$   TANGENTL    NS
+$$ PHASES (degrees)
+$$   RADIAL
+$$   TANGENTL    EW
+$$   TANGENTL    NS
+$$
+$$ Displacement is defined positive in upwards, South and West direction.
+$$ The phase lag is relative to Greenwich and lags positive. The
+$$ Gutenberg-Bullen Greens function is used. In the ocean tide model the
+$$ deficit of tidal water mass has been corrected by subtracting a uniform
+$$ layer of water with a certain phase lag globally.
+$$
+$$ Complete <model name> : No interpolation of ocean model was necessary
+$$ <model name>_PP       : Ocean model has been interpolated near the station
+$$                         (PP = Post-Processing)
+$$
+$$ CMC:  YES  (corr.tide centre of mass)
+$$
+$$ Ocean tide model: TPXO.7.2, Ssa tide from TPXO.6.2
+$$
+$$ END HEADER
+$$
+$$
+$$ $$$$$$$$$$$$$$$$$$$ REAL-TIME $$$$$$$$$$$$$$$$$$$ 
+$$
+$$
+  FFMJ00DEU0
+$$ Complete TPXO.7.2
+$$ Computed by OLCMC/OLFG, H.-G. Scherneck, Onsala Space Observatory 2014-Jan-20
+$$ FFMJ00DEU0,                RADI TANG  lon/lat:    8.6650   50.0906  178.220
+  .00634 .00206 .00138 .00060 .00156 .00160 .00049 .00051 .00032 .00023 .00029
+  .00258 .00038 .00060 .00010 .00215 .00131 .00070 .00026 .00006 .00003 .00003
+  .00201 .00043 .00044 .00010 .00385 .00244 .00120 .00047 .00034 .00024 .00028
+   -86.9  -66.6 -102.6  -68.1  149.9  141.5  146.1  122.9   92.9   47.0    6.2
+   117.4  153.6   91.5  142.4   75.0   41.0   71.8    4.8  -67.7  100.3    6.6
+    79.3  131.6   54.1  122.5 -102.6 -108.9 -105.0 -113.9   62.0   42.1    5.4
+$$
+  FFMJ01DEU0
+$$ Complete TPXO.7.2
+$$ Computed by OLCMC/OLFG, H.-G. Scherneck, Onsala Space Observatory 2014-Jan-20
+$$ FFMJ00DEU0,                RADI TANG  lon/lat:    8.6650   50.0906  178.220
+  .00634 .00206 .00138 .00060 .00156 .00160 .00049 .00051 .00032 .00023 .00029
+  .00258 .00038 .00060 .00010 .00215 .00131 .00070 .00026 .00006 .00003 .00003
+  .00201 .00043 .00044 .00010 .00385 .00244 .00120 .00047 .00034 .00024 .00028
+   -86.9  -66.6 -102.6  -68.1  149.9  141.5  146.1  122.9   92.9   47.0    6.2
+   117.4  153.6   91.5  142.4   75.0   41.0   71.8    4.8  -67.7  100.3    6.6
+    79.3  131.6   54.1  122.5 -102.6 -108.9 -105.0 -113.9   62.0   42.1    5.4
+$$
+  WTZR00DEU0
+$$ Complete TPXO.7.2
+$$ Computed by OLCMC/OLFG, H.-G. Scherneck, Onsala Space Observatory 2014-Jan-20
+$$ WTZR00DEU0,                RADI TANG  lon/lat:   12.8789   49.1442  666.010
+  .00564 .00188 .00124 .00054 .00176 .00166 .00054 .00050 .00030 .00020 .00025
+  .00220 .00028 .00052 .00008 .00198 .00120 .00065 .00023 .00003 .00005 .00006
+  .00160 .00033 .00034 .00008 .00396 .00248 .00124 .00046 .00033 .00023 .00025
+   -89.5  -70.6 -104.2  -72.1  151.8  144.3  149.5  125.7  103.8   52.7    6.8
+   118.5  162.2   90.3  147.6   79.9   43.8   76.5    5.9  -82.8   94.4    6.4
+    78.0  139.1   51.4  132.4 -101.5 -109.7 -104.4 -114.3   63.3   42.0    5.5
+$$
+$$
+$$ $$$$$$$$$$$$$$$$$$$ RINEX $$$$$$$$$$$$$$$$$$$ 
+$$
+$$
+  FFMJ00DEU
+$$ Complete TPXO.7.2
+$$ Computed by OLCMC/OLFG, H.-G. Scherneck, Onsala Space Observatory 2014-Jan-20
+$$ FFMJ00DEU,                RADI TANG  lon/lat:    8.6650   50.0906  178.220
+  .00634 .00206 .00138 .00060 .00156 .00160 .00049 .00051 .00032 .00023 .00029
+  .00258 .00038 .00060 .00010 .00215 .00131 .00070 .00026 .00006 .00003 .00003
+  .00201 .00043 .00044 .00010 .00385 .00244 .00120 .00047 .00034 .00024 .00028
+   -86.9  -66.6 -102.6  -68.1  149.9  141.5  146.1  122.9   92.9   47.0    6.2
+   117.4  153.6   91.5  142.4   75.0   41.0   71.8    4.8  -67.7  100.3    6.6
+    79.3  131.6   54.1  122.5 -102.6 -108.9 -105.0 -113.9   62.0   42.1    5.4
+$$
+  FFMJ01DEU
+$$ Complete TPXO.7.2
+$$ Computed by OLCMC/OLFG, H.-G. Scherneck, Onsala Space Observatory 2014-Jan-20
+$$ FFMJ00DEU,                RADI TANG  lon/lat:    8.6650   50.0906  178.220
+  .00634 .00206 .00138 .00060 .00156 .00160 .00049 .00051 .00032 .00023 .00029
+  .00258 .00038 .00060 .00010 .00215 .00131 .00070 .00026 .00006 .00003 .00003
+  .00201 .00043 .00044 .00010 .00385 .00244 .00120 .00047 .00034 .00024 .00028
+   -86.9  -66.6 -102.6  -68.1  149.9  141.5  146.1  122.9   92.9   47.0    6.2
+   117.4  153.6   91.5  142.4   75.0   41.0   71.8    4.8  -67.7  100.3    6.6
+    79.3  131.6   54.1  122.5 -102.6 -108.9 -105.0 -113.9   62.0   42.1    5.4
+$$
+  WTZR00DEU
+$$ Complete TPXO.7.2
+$$ Computed by OLCMC/OLFG, H.-G. Scherneck, Onsala Space Observatory 2014-Jan-20
+$$ WTZR00DEU,                RADI TANG  lon/lat:   12.8789   49.1442  666.010
+  .00564 .00188 .00124 .00054 .00176 .00166 .00054 .00050 .00030 .00020 .00025
+  .00220 .00028 .00052 .00008 .00198 .00120 .00065 .00023 .00003 .00005 .00006
+  .00160 .00033 .00034 .00008 .00396 .00248 .00124 .00046 .00033 .00023 .00025
+   -89.5  -70.6 -104.2  -72.1  151.8  144.3  149.5  125.7  103.8   52.7    6.8
+   118.5  162.2   90.3  147.6   79.9   43.8   76.5    5.9  -82.8   94.4    6.4
+    78.0  139.1   51.4  132.4 -101.5 -109.7 -104.4 -114.3   63.3   42.0    5.5
+$$

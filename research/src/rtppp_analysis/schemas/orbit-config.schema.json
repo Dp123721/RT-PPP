@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rtppp.local/schemas/orbit-config.schema.json",
+  "title": "RT-PPP orbit and clock analysis configuration",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["analysis", "output_directory", "reference", "candidates", "options"],
+  "properties": {
+    "analysis": {"const": "orbit_clock"},
+    "output_directory": {"type": "string", "minLength": 1, "pattern": "\\S"},
+    "reference": {"$ref": "#/$defs/product"},
+    "candidates": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/product"}
+    },
+    "options": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["orbit_interpolation_points", "max_orbit_gap_seconds", "max_clock_gap_seconds", "clock_datum", "pairwise_centers"],
+      "properties": {
+        "orbit_interpolation_points": {"type": "integer", "minimum": 2, "maximum": 20},
+        "max_orbit_gap_seconds": {"type": "number", "exclusiveMinimum": 0},
+        "max_clock_gap_seconds": {"type": "number", "exclusiveMinimum": 0},
+        "clock_datum": {"enum": ["constellation_epoch_median"]},
+        "pairwise_centers": {"type": "boolean"}
+      }
+    }
+  },
+  "$defs": {
+    "product": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "sp3", "time_scale", "orbit_reference", "reference_frame"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1, "pattern": "\\S"},
+        "sp3": {"type": "string", "minLength": 1, "pattern": "\\S"},
+        "clk": {"type": "string", "minLength": 1, "pattern": "\\S"},
+        "time_scale": {"enum": ["GPS", "UTC"]},
+        "orbit_reference": {"enum": ["APC", "COM", "UNKNOWN"]},
+        "reference_frame": {"type": "string", "minLength": 1, "pattern": "^[A-Za-z0-9._-]+$"}
+      }
+    }
+  }
+}

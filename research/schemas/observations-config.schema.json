@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rtppp.local/schemas/observations-config.schema.json",
+  "title": "RT-PPP observation analysis configuration",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["analysis", "output_directory", "datasets", "options"],
+  "properties": {
+    "analysis": {"const": "observations"},
+    "output_directory": {"type": "string", "minLength": 1, "pattern": "\\S"},
+    "datasets": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "station", "rinex", "time_scale"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1, "pattern": "\\S"},
+          "station": {"type": "string", "minLength": 1, "pattern": "\\S"},
+          "rinex": {"type": "string", "minLength": 1, "pattern": "\\S"},
+          "time_scale": {"enum": ["GPS", "UTC"]},
+          "telemetry_directory": {"type": "string", "minLength": 1, "pattern": "\\S"},
+          "telemetry_source_id": {"type": "string", "minLength": 1, "pattern": "\\S"}
+        }
+      }
+    },
+    "options": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["expected_interval_seconds", "gap_factor"],
+      "properties": {
+        "expected_interval_seconds": {"type": "number", "minimum": 0},
+        "gap_factor": {"type": "number", "exclusiveMinimum": 1},
+        "write_parquet": {"type": "boolean"}
+      }
+    }
+  }
+}

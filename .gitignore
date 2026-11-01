@@ -29,18 +29,28 @@ Makefile*
 moc_*.cpp
 ui_*.h
 qrc_*.cpp
+*_ui.py
 Thumbs.db
 *.res
 *.rc
 /.qmake.cache
 /.qmake.stash
 
-# Qt build directory
-build*/
+# Local reference source trees
+/BNC_src(legacy)/
+/GREAT_legacy/
+/newmat(legacy)/
+
+# Build products and generated files
+/build/
+/build-*/
+/debug/
+/release/
 
 # qtcreator generated files
 *.pro.user*
 CMakeLists.txt.user*
+*.qtvscr
 
 # xemacs temporary files
 *.flc
@@ -49,6 +59,8 @@ CMakeLists.txt.user*
 .*.swp
 
 # Visual Studio generated files
+.vs/
+.vscode/
 *.ib_pdb_index
 *.idb
 *.ilk
@@ -63,12 +75,25 @@ CMakeLists.txt.user*
 *.vcxproj
 *vcxproj.*
 
+# Maintained Visual Studio entry point
+!RT-PPP.sln
+!RT-PPP.vcxproj
+!RT-PPP.vcxproj.filters
+
 # MinGW generated files
 *.Debug
 *.Release
 
 # Python byte code
 *.pyc
+__pycache__/
+/gfs_python/.venv/
+/gfs_python/wheelhouse/
+
+# Local runtime outputs and machine-specific settings
+output/
+*.log
+rtppp_settings.ini
 
 # Binaries
 # --------

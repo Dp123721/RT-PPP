@@ -1,0 +1,17 @@
+{
+  "analysis": "observations",
+  "output_directory": "D:/BNC/RT-PPP/RT-PPP/output/research/obs",
+  "datasets": [
+    {
+      "id": "wtzr",
+      "station": "wtzr",
+      "rinex": "D:/BNC/RT-PPP/RT-PPP/output/data/WTZR00DEU_S_20260650000_01D_15S_MO.rnx",
+      "time_scale": "GPS"
+    }
+  ],
+  "options": {
+    "expected_interval_seconds": 1.0,
+    "gap_factor": 1.5,
+    "write_parquet": false
+  }
+}

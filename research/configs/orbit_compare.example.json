@@ -1,0 +1,37 @@
+{
+  "analysis": "orbit_clock",
+  "output_directory": "../workspace/orbit_example",
+  "reference": {
+    "id": "igs_precise",
+    "sp3": "D:/data/precise/reference.sp3",
+    "clk": "D:/data/precise/reference.clk",
+    "time_scale": "GPS",
+    "orbit_reference": "APC",
+    "reference_frame": "IGS20"
+  },
+  "candidates": [
+    {
+      "id": "ssr_center_a",
+      "sp3": "D:/data/ssr_center_a/rtppp_20260727.sp3",
+      "clk": "D:/data/ssr_center_a/rtppp_20260727.clk",
+      "time_scale": "UTC",
+      "orbit_reference": "UNKNOWN",
+      "reference_frame": "UNKNOWN"
+    },
+    {
+      "id": "ssr_center_b",
+      "sp3": "D:/data/ssr_center_b/rtppp_20260727.sp3",
+      "clk": "D:/data/ssr_center_b/rtppp_20260727.clk",
+      "time_scale": "UTC",
+      "orbit_reference": "UNKNOWN",
+      "reference_frame": "UNKNOWN"
+    }
+  ],
+  "options": {
+    "orbit_interpolation_points": 9,
+    "max_orbit_gap_seconds": 900,
+    "max_clock_gap_seconds": 120,
+    "clock_datum": "constellation_epoch_median",
+    "pairwise_centers": true
+  }
+}

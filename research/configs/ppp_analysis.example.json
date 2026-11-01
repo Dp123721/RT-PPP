@@ -1,0 +1,32 @@
+{
+  "analysis": "ppp",
+  "output_directory": "../workspace/ppp_example",
+  "datasets": [
+    {
+      "id": "bjfs_bie",
+      "algorithm_label": "BIE",
+      "path": "D:/data/ppp/BJFS/ppp_BJFS_20260727.json",
+      "reference_ecef_m": [-2148744.123, 4426641.234, 4044655.345],
+      "residual_directory": "D:/data/telemetry",
+      "residual_source_id": "NTRIP-BJFS"
+    },
+    {
+      "id": "bjfs_lambda",
+      "algorithm_label": "LAMBDA",
+      "path": "D:/data/ppp_lambda/BJFS/ppp_BJFS_20260727.json",
+      "reference_ecef_m": [-2148744.123, 4426641.234, 4044655.345]
+    }
+  ],
+  "options": {
+    "horizontal_threshold_m": 0.1,
+    "vertical_threshold_m": 0.2,
+    "sustain_seconds": 600,
+    "convergence_gap_factor": 1.5,
+    "convergence_max_gap_seconds": 0,
+    "jump_mad_factor": 8,
+    "jump_minimum_m": 0.05,
+    "bootstrap_samples": 2000,
+    "bootstrap_confidence": 0.95,
+    "residual_outlier_sigma": 4
+  }
+}
